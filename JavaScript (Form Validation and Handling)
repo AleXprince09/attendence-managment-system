@@ -1,0 +1,39 @@
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Get the values from the input fields
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // Simple validation
+    if (!username || !password) {
+        document.getElementById('message').innerText = 'Both fields are required!';
+        document.getElementById('message').style.color = 'red';
+        return;
+    }
+
+    // Send data to backend API (replace with your backend endpoint)
+    try {
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById('message').innerText = 'Login successful!';
+            document.getElementById('message').style.color = 'green';
+        } else {
+            document.getElementById('message').innerText = data.message || 'Invalid credentials';
+            document.getElementById('message').style.color = 'red';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('message').innerText = 'Error occurred, please try again later.';
+        document.getElementById('message').style.color = 'red';
+    }
+});
